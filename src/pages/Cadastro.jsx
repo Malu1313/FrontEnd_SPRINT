@@ -1,75 +1,148 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import * as React from "react";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Person from "@mui/icons-material/Person";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import api from "../axios/axios";
 
 function Cadastro() {
- 
-    const [events, setEventos] = useState([]);
+  const [user, setUser] = useState({
+    cpf: "",
+    email: "",
+    password: "",
+    name: "",
+    data_nascimento: "",
+  });
 
-    async function getCadastro() {
-      //Chamada da Api
-      await api.getCadastro().then(
-        (response) => {
-          console.log(response.data.events);
-          setCadastro(response.data.events);
-        },
-        (error) => {
-          console.log("Erro ", error);
-        }
-      );
+  const onChange = (event) => {
+    const { name, value } = event.target;
+    setUser({ ...user, [name]: value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await api.postCadastro(user);
+      alert(response.data.message);
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.error || "Erro ao cadastrar");
     }
-  
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box display="flex" flexDirection="column" alignItems="center" >
-
-        <Typography component="h1" variant="h5">
-        Cadastro
+    <Container
+      //component="main"
+      //maxWidth="xxl"
+      sx={{
+        backgroundColor: "#F26F6F",
+       // minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: "#B30E0A", // Fundo vermelho SENAI
+          padding: 4, // Espaçamento interno maior
+          borderRadius: 5, // Bordas arredondadas
+          width: "35%", // Garante que o fundo ocupe todo o espaço disponível
+          //maxWidth: "400px", // Define uma largura máxima
+          color: "white", // Deixa o texto branco para melhor contraste
+        }}
+      >
+        <Avatar sx={{ margin: 1, backgroundColor: "white", color: "#c81f11" }}>
+          <Person />
+        </Avatar>
+        <Typography component="h1" variant="h5" sx={{ color: "white" }}>
+          Login
         </Typography>
-
-        <Box component="form" noValidate>
-          <TextField
-            margin="normal"
+        <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit} noValidate>
+        <TextField
             required
             fullWidth
+            id="nome"
             label="Nome"
+            name="nome"
+            margin="normal"
             type="text"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="CPF"
-            type="number"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="E-mail"
-            type="email"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Senha"
-            type="password"
+            value={user.name}
+            onChange={onChange}
+            sx={{ backgroundColor: "white", borderRadius: 1 }}
           />
 
-          <Button type="submit" fullWidth variant="contained" >
-            Cadastrar
+
+          <TextField
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            margin="normal"
+            value={user.email}
+            onChange={onChange}
+            sx={{ backgroundColor: "white", borderRadius: 1, border: "5" }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="senha"
+            label="Senha"
+            name="password"
+            margin="normal"
+            type="password"
+            value={user.password}
+            onChange={onChange}
+            sx={{ backgroundColor: "white", borderRadius: 1 }}
+          />
+
+          <TextField
+            required
+            fullWidth
+            id="cpf"
+            label="CPF"
+            name="cpf"
+            margin="normal"
+            type="number"
+            value={user.cpf}
+            onChange={onChange}
+            sx={{ backgroundColor: "white", borderRadius: 1 }}
+          />
+
+          <Button
+            sx={{
+              mt: 3,
+              mb: 2,
+              backgroundColor: "FF0802",
+              color: "white",
+              "&:hover": { backgroundColor: "#e0e0e0" },
+            }}
+            fullWidth
+            type="submit"
+            variant="contained"
+          >
+            Entrar
           </Button>
-          <Button fullWidth variant="contained">
-            <Link to="/">Já tem uma conta? Faça login</Link>
-          </Button>
+          <Link
+            to="/"
+            style={{
+              color: "FF0802",
+              textDecoration: "underline",
+              display: "block",
+              textAlign: "center",
+            }}
+          >
+            Já tem conta? Faça o Login
+          </Link>
         </Box>
       </Box>
     </Container>
