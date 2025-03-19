@@ -1,15 +1,15 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL:"http://localhost:5000/api/v1/",
+    baseURL:"http://10.89.240.68:3000/projeto_senai/",
     headers:{
         'accept':'application/json'
     }
 });
 
 const sheets = {
-    postCadastro:()=>api.post("/cadastro"),
-    postLogin:()=>api.post("/login"),
+    postCadastro:()=>api.post("/usuario", user),
+    postLogin:()=>api.post("/login", user),
     getSala:()=>api.get("/sala")
 }
 

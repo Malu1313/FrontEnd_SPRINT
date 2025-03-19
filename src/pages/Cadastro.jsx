@@ -1,14 +1,14 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Person from "@mui/icons-material/Person";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios/axios";
+import logosenai from "../assets/logo-senai.png";
+import seta from "../assets/seta.png"
+import avatar from "../assets/boneco.png"
 
 function Cadastro() {
   const [user, setUser] = useState({
@@ -16,7 +16,6 @@ function Cadastro() {
     email: "",
     password: "",
     name: "",
-    data_nascimento: "",
   });
 
   const onChange = (event) => {
@@ -37,49 +36,53 @@ function Cadastro() {
 
   return (
     <Container
-      //component="main"
-      //maxWidth="xxl"
       sx={{
-        backgroundColor: "#F26F6F",
-       // minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        maxHeight:"xl",
+       backgroundColor: "#F26F6F",
+       height: "100vh",
+       display: "flex",
+       width: "100%", 
+       justifyContent:"center",
+       alignItems:"center"
       }}
     >
       <Box
         sx={{
-          display: "flex",
+          display: 'flex',
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#B30E0A", // Fundo vermelho SENAI
-          padding: 4, // Espaçamento interno maior
+          backgroundColor: "#B30E0A", // Fundo vermelho
+          padding: 5, // Espaçamento interno maior
           borderRadius: 5, // Bordas arredondadas
-          width: "35%", // Garante que o fundo ocupe todo o espaço disponível
-          //maxWidth: "400px", // Define uma largura máxima
-          color: "white", // Deixa o texto branco para melhor contraste
+          width: "300px", //  fundo ocupe todo o espaço disponível
+          
         }}
       >
-        <Avatar sx={{ margin: 1, backgroundColor: "white", color: "#c81f11" }}>
-          <Person />
-        </Avatar>
-        <Typography component="h1" variant="h5" sx={{ color: "white" }}>
-          Login
-        </Typography>
+        <img
+          src={logosenai}
+          alt="Logo do Senai"
+          style={{
+            width: "200px", // Define o tamanho da imagem
+            height: "auto", // Mantém a proporção da imagem
+            marginBottom: "0px", // Espaço abaixo da imagem
+          }}
+        />
+        
+        
+
         <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit} noValidate>
-        <TextField
+          <TextField
             required
             fullWidth
             id="nome"
             label="Nome"
-            name="nome"
+            name="name"
             margin="normal"
-            type="text"
-            value={user.name}
+            //type="normal"
+            value={user.nome}
             onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 1 }}
+            sx={{ backgroundColor: "white", borderRadius: 5 }}
           />
-
 
           <TextField
             required
@@ -90,7 +93,7 @@ function Cadastro() {
             margin="normal"
             value={user.email}
             onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 1, border: "5" }}
+            sx={{ backgroundColor: "white", borderRadius: 5 }}
           />
           <TextField
             required
@@ -102,7 +105,7 @@ function Cadastro() {
             type="password"
             value={user.password}
             onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 1 }}
+            sx={{ backgroundColor: "white", borderRadius: 5 }}
           />
 
           <TextField
@@ -112,30 +115,31 @@ function Cadastro() {
             label="CPF"
             name="cpf"
             margin="normal"
-            type="number"
+            type="normal"
             value={user.cpf}
             onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 1 }}
+            sx={{ backgroundColor: "white", borderRadius: 5 }}
           />
 
           <Button
             sx={{
-              mt: 3,
-              mb: 2,
-              backgroundColor: "FF0802",
+              marginTop: 3, // Corrigido o nome da propriedade
+              marginBottom: 2, // Corrigido o nome da propriedade
+              backgroundColor: "#FF0802", // Corrigido o valor hexadecimal (adicionando #)
               color: "white",
-              "&:hover": { backgroundColor: "#e0e0e0" },
+              border: "2",
             }}
             fullWidth
             type="submit"
             variant="contained"
           >
-            Entrar
+            Cadastrar
           </Button>
+
           <Link
             to="/"
             style={{
-              color: "FF0802",
+              color: "white",
               textDecoration: "underline",
               display: "block",
               textAlign: "center",
