@@ -8,7 +8,7 @@ import { useState } from "react";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
 import seta from "../assets/seta.png"
-import avatar from "../assets/boneco.png"
+import Footer from '../components/Footer'; // Importando o Footer
 
 function Cadastro() {
   const [user, setUser] = useState({
@@ -34,11 +34,12 @@ function Cadastro() {
     }
   };
 
-  return (
+  return ( 
     <Container
       sx={{
-        maxHeight:"xl",
-       backgroundColor: "#F26F6F",
+        //padding:"10px",
+      maxHeight:"xl",
+      backgroundColor: "#F26F6F",
        height: "100vh",
        display: "flex",
        width: "100%", 
@@ -48,13 +49,15 @@ function Cadastro() {
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#B30E0A", // Fundo vermelho
-          padding: 5, // Espaçamento interno maior
-          borderRadius: 5, // Bordas arredondadas
-          width: "300px", //  fundo ocupe todo o espaço disponível
+          display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "#B30E0A", // Fundo vermelho
+            padding: 4, // Espaçamento interno maior
+            borderRadius: 5, // Bordas arredondadas
+            width: "300px", // fundo ocupe todo o espaço disponível
+            maxWidth: "300px", // largura máxima
+            color: "white",
           
         }}
       >
@@ -64,7 +67,7 @@ function Cadastro() {
           style={{
             width: "200px", // Define o tamanho da imagem
             height: "auto", // Mantém a proporção da imagem
-            marginBottom: "0px", // Espaço abaixo da imagem
+            //marginBottom: "0px", // Espaço abaixo da imagem
           }}
         />
         
@@ -151,6 +154,7 @@ function Cadastro() {
       </Box>
     </Container>
   );
+  <Footer />
 }
 
 export default Cadastro;

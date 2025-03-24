@@ -12,6 +12,8 @@ import Paper from '@mui/material/Paper';
 import api from '../axios/axios';
 import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 
 function ListSala() {
   const [sala, setSala] = useState([]);
@@ -31,7 +33,7 @@ function ListSala() {
     );
   }
 
-  const Sala = users.map((sala) => {
+  const Sala = sala.map((sala) => {
     return (
       <TableRow key={sala.id_sala}>
         <TableCell align="center">{sala.numero}</TableCell>

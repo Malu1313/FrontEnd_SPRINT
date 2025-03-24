@@ -8,16 +8,18 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../axios/axios"
+import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
+import Footer from '../components/Footer'; // Importando o Footer
 
 function Login() {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  
+
   const navigate = useNavigate();
+
   const onChange = (event) => {
     const { name, value } = event.target;
     setUser({ ...user, [name]: value });
@@ -28,21 +30,22 @@ function Login() {
     login();
   };
 
-  async function login(){
+  async function login() {
     await api.postLogin(user).then(
-      (response)=>{
-        alert(response.data.message)
-        localStorage.setItem('authenticated', true)
-        navigate("sala/")
+      (response) => {
+        alert(response.data.message);
+        localStorage.setItem('authenticated', true);
+        navigate("sala/"); // Navegar para outra página após o login
       },
-    (error)=>{
-      console.log(error)
-      alert(error.response.data.error)
-    }
-    )
+      (error) => {
+        console.log(error);
+        alert(error.response.data.error);
+      }
+    );
   }
 
-    return (
+  return (
+    <>
       <Container
         sx={{
           backgroundColor: "#F26F6F",
@@ -57,12 +60,12 @@ function Login() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            backgroundColor: "#B30E0A", // Fundo vermelho 
+            backgroundColor: "#B30E0A", // Fundo vermelho
             padding: 4, // Espaçamento interno maior
             borderRadius: 5, // Bordas arredondadas
             width: "250px", // fundo ocupe todo o espaço disponível
-            maxWidth: "300px", //  largura máxima
-            color: "white", 
+            maxWidth: "300px", // largura máxima
+            color: "white",
           }}
         >
           <img
@@ -98,22 +101,19 @@ function Login() {
               onChange={onChange}
               sx={{ backgroundColor: "white", borderRadius: 1 }}
             />
-            <Link>
-              <Button 
-                sx={{
-                  marginTop: 3, 
-                  marginBottom: 2, 
-                  backgroundColor: "#FF0802", 
-                  color: "white", 
-                  
-                }}
-                fullWidth
-                type="submit"
-                variant="contained"
-              >
-                Entrar
-              </Button>
-            </Link>
+            <Button
+              sx={{
+                marginTop: 3,
+                marginBottom: 2,
+                backgroundColor: "#FF0802",
+                color: "white",
+              }}
+              fullWidth
+              type="submit"
+              variant="contained"
+            >
+              Entrar
+            </Button>
             <Link
               to="/Cadastro"
               style={{
@@ -127,10 +127,11 @@ function Login() {
             </Link>
           </Box>
         </Box>
-    
       </Container>
-    );
-  }
-  
-  export default Login;
-  
+
+      <Footer /> {/* Colocando o Footer aqui após o conteúdo da página */}
+    </>
+  );
+}
+
+export default Login;
