@@ -1,24 +1,25 @@
-// src/components/Footer.jsx
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React from "react";
+import Box from "@mui/material/Box";
 
 const Footer = () => {
   return (
     <Box
+      component="footer"
       sx={{
-        backgroundColor: '#B30E0A', // Cor de fundo
-        color: 'black',          // Cor do texto
-        padding: '7px',         // Espaçamento interno
-        textAlign: 'center',     // Centralizar o texto
-        position: 'fixed',       // Manter o footer fixo
-        bottom: 0,               // Colocar o footer no final da página
-        width: '100%',           // Garantir que ocupe toda a largura da tela
-        fontSize: '10px',        // Tamanho da fonte
+        backgroundColor: "#B30E0A",
+        width: "100%",
+        height: "50px",
+        position: "static",
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center", // Alinha o texto horizontalmente
+        alignItems: "center", // Alinha o texto verticalmente
+        color: "#fff", // Garante que o texto seja visível
+        fontSize: "17px", // Ajusta o tamanho da fonte conforme necessário
+        padding: "0 10px", // Adiciona um pequeno padding para o texto não ficar colado nas bordas
       }}
     >
-      <Typography >
-        &copy; Desenvolvido por Priscila, Maria Luisa e Gabriel.
-      </Typography>
+      <p>Desenvolvido por Priscila, Maria Luisa e Gabriel</p>
     </Box>
   );
 };

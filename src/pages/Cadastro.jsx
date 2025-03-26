@@ -3,158 +3,145 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios/axios";
+
 import logosenai from "../assets/logo-senai.png";
-import seta from "../assets/seta.png"
-import Footer from '../components/Footer'; // Importando o Footer
 
 function Cadastro() {
-  const [user, setUser] = useState({
+  const [usuario, setUser] = useState({
     cpf: "",
     email: "",
-    password: "",
-    name: "",
+    senha: "",
+    nome: "",
   });
+
+  const navigate = useNavigate();
 
   const onChange = (event) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...usuario, [name]: value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await api.postCadastro(user);
+      const response = await api.postCadastro(usuario);
       alert(response.data.message);
+      navigate("/sala");
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.error || "Erro ao cadastrar");
     }
   };
 
-  return ( 
+  return (
     <Container
+      maxWidth="xs"
       sx={{
-        //padding:"10px",
-      maxHeight:"xl",
-      backgroundColor: "#F26F6F",
-       height: "100vh",
-       display: "flex",
-       width: "100%", 
-       justifyContent:"center",
-       alignItems:"center"
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#B30E0A",
+        padding: 1,
+        borderRadius: 2,
+        boxShadow: 3,
       }}
     >
+      <img
+        src={logosenai}
+        alt="Logo do Senai"
+        style={{
+          width: "200px",
+          height: "auto",
+          marginTop: "-10%"
+        }}
+      />
       <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
         sx={{
+          mt: "-10%",
           display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: "#B30E0A", // Fundo vermelho
-            padding: 4, // Espaçamento interno maior
-            borderRadius: 5, // Bordas arredondadas
-            width: "300px", // fundo ocupe todo o espaço disponível
-            maxWidth: "300px", // largura máxima
-            color: "white",
-          
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <img
-          src={logosenai}
-          alt="Logo do Senai"
-          style={{
-            width: "200px", // Define o tamanho da imagem
-            height: "auto", // Mantém a proporção da imagem
-            //marginBottom: "0px", // Espaço abaixo da imagem
-          }}
+        <TextField
+          required
+          id="nome"
+          label="Nome"
+          name="nome"
+          margin="normal"
+          value={usuario.nome}
+          onChange={onChange}
+          sx={{ 
+            backgroundColor: "white", 
+            borderRadius: 5,
+            width: '130%' }}
         />
-        
-        
+        <TextField
+          required
+          id="email"
+          label="Email"
+          name="email"
+          margin="normal"
+          value={usuario.email}
+          onChange={onChange}
+          sx={{ 
+            backgroundColor: "white", 
+            borderRadius: 5,
+            width: '130%' }}
+        />
+        <TextField
+          required
+          id="senha"
+          label="Senha"
+          name="senha"
+          margin="normal"
+          type="password"
+          value={usuario.senha}
+          onChange={onChange}
+          sx={{ 
+            backgroundColor: "white", 
+            borderRadius: 5,
+            width: '130%'}}
+        />
+        <TextField
+          required
+          id="cpf"
+          label="CPF"
+          name="cpf"
+          margin="normal"
+          value={usuario.cpf}
+          onChange={onChange}
+          sx={{ 
+            backgroundColor: "white", 
+            borderRadius: 5,
+            width: '130%'}}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mt: 1, mb: 1, backgroundColor: "#FF0802" }}
+          component={Link}
+          to = "/"
+        >
 
-        <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit} noValidate>
-          <TextField
-            required
-            fullWidth
-            id="nome"
-            label="Nome"
-            name="name"
-            margin="normal"
-            //type="normal"
-            value={user.nome}
-            onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 5 }}
-          />
-
-          <TextField
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            margin="normal"
-            value={user.email}
-            onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 5 }}
-          />
-          <TextField
-            required
-            fullWidth
-            id="senha"
-            label="Senha"
-            name="password"
-            margin="normal"
-            type="password"
-            value={user.password}
-            onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 5 }}
-          />
-
-          <TextField
-            required
-            fullWidth
-            id="cpf"
-            label="CPF"
-            name="cpf"
-            margin="normal"
-            type="normal"
-            value={user.cpf}
-            onChange={onChange}
-            sx={{ backgroundColor: "white", borderRadius: 5 }}
-          />
-
-          <Button
-            sx={{
-              marginTop: 3, // Corrigido o nome da propriedade
-              marginBottom: 2, // Corrigido o nome da propriedade
-              backgroundColor: "#FF0802", // Corrigido o valor hexadecimal (adicionando #)
-              color: "white",
-              border: "2",
-            }}
-            fullWidth
-            type="submit"
-            variant="contained"
-          >
-            Cadastrar
-          </Button>
-
-          <Link
-            to="/"
-            style={{
-              color: "white",
-              textDecoration: "underline",
-              display: "block",
-              textAlign: "center",
-            }}
-          >
-            Já tem conta? Faça o Login
-          </Link>
-        </Box>
+          Cadastrar
+        </Button>
+        <Button
+          sx={{ mt: 1, color: "white" }}
+          component={Link}
+          to="/"
+        >
+          Já está cadastrado? Clique aqui
+        </Button>
       </Box>
     </Container>
   );
-  <Footer />
 }
 
 export default Cadastro;
