@@ -44,9 +44,9 @@ function Cadastro() {
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#B30E0A",
-        padding: 1,
+        padding: 6,
         borderRadius: 2,
-        boxShadow: 3,
+        //boxShadow: 3,
       }}
     >
       <img

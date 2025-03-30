@@ -9,11 +9,14 @@ const DefaultLayout = ({ children }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100px",
+        minHeight: "100vh",
         backgroundColor: "#F26F6F",
+      
       }}
     >
+      
       <Header />
+      
       {/*AQUI VEM O CONTEUDO DA PAGINA*/}
       <Box
         sx={{

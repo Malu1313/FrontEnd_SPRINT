@@ -53,7 +53,7 @@ function Login() {
             style={{
               width: "200px", // Define o tamanho da imagem
               height: "auto", // Mantém a proporção da imagem
-              marginBottom: "1px", // Espaço abaixo da imagem
+              //marginBottom: "1px", // Espaço abaixo da imagem
             }}
           />
       <Box
@@ -79,7 +79,9 @@ function Login() {
           sx={{ 
             backgroundColor: "white", 
             borderRadius: 3,
-            width: '100%' }}
+            width: '100%',
+            
+          }}
         />
         <TextField
           required
@@ -108,7 +110,7 @@ function Login() {
           component={Link}
           to="/cadastro"
         >
-          Ainda não tem uma conta?Faça o cadastro
+          Ainda não tem uma conta? Faça o cadastro
         </Button>
       </Box>
     </Container>
