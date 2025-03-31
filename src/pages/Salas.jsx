@@ -46,22 +46,27 @@ function ListSalas() {
       ) : (
         <div>
           <div
-            style={{
-              display: "flex", // Define que o contêiner será flexível
-              justifyContent: "center", // Centraliza o conteúdo horizontalmente
-              alignItems: "center", // Centraliza o conteúdo verticalmente
-              fontWeight:"bold"
-            }}
           >
-           <h1>Salas Disponíveis</h1>
+           <h1 style={{textAlign:"center"}}
+           
+           >Salas Disponíveis</h1>
           </div>
           
-          <TableContainer component={Paper} style={{ margin: "2px" }}>
-            <Table size="xs">
-              <TableHead
-                style={{ backgroundColor: "#D9D9D9", borderStyle: "solid" }}
+          <TableContainer //cria uma tabela
+            component={Paper}
+            sx={{
+              marginTop: 4,
+              borderRadius: 2,
+              boxShadow: 3,
+              backgroundColor: "#D9D9D9",
+              
+              textAlign:"center"
+            }}
+          >
+            <Table sx={{minWidth: 250}}>
+            <TableHead
+                sx={{ backgroundColor: "#D9D9D9", fontWeight:"bold", }}
               ></TableHead>
-
               <TableBody>
                 {salas.map((sala) => (
                   <TableRow key={sala.id_sala}>
@@ -71,23 +76,28 @@ function ListSalas() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
           </TableContainer>
+          <Button //estilização botão sair - logout
+            fullWidth
+            variant="contained"
+            onClick={logout}
+            style={{
+              backgroundColor: "#d40000",
+              color: "white",
+              fontWeight: "bold",
+              marginTop: 10,
+            }}
+          >
+            SAIR
+          </Button>
+      /
+              
+            
+          
         </div>
       )}
-       <img
-        src={setaImage}
-        alt="Seta de Logout"
-        onClick={logout} // Ação de logout
-        style={{
-          position: "fixed", // Fixa a seta na tela
-          bottom: "70px", // Distância da parte inferior da tela, acima do footer
-          left: "20px", // Distância da parte esquerda da tela
-          width: "40px", // Tamanho da seta
-          cursor: "pointer", // Muda o cursor para a mãozinha ao passar sobre a seta
-         
-        }}
-      />
+      
     </div>
   );
 }
