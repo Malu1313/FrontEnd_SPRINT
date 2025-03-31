@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios/axios";
+
 import logosenai from "../assets/logo-senai.png";
 
 function Login() {
@@ -25,11 +26,13 @@ function Login() {
     event.preventDefault();
     try {
       const response = await api.postLogin(usuario);
+      console.log(response.data.message)
       alert(response.data.message);
-      navigate("Salas");
+      localStorage.setItem('authenticated', true)
+      navigate("/salas");
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.error || "Erro ao Logar");
+      alert(error.response.data.error);
     }
   };
 

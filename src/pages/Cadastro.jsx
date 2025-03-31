@@ -29,7 +29,7 @@ function Cadastro() {
     try {
       const response = await api.postCadastro(usuario);
       alert(response.data.message);
-      navigate("/sala");
+      navigate("/salas");
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.error || "Erro ao cadastrar");
@@ -44,9 +44,9 @@ function Cadastro() {
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#B30E0A",
-        padding: 6,
+        padding: -0,
         borderRadius: 2,
-        //boxShadow: 3,
+        
       }}
     >
       <img
@@ -55,7 +55,7 @@ function Cadastro() {
         style={{
           width: "200px",
           height: "auto",
-          marginTop: "-10%"
+          marginTop: "-10%",
         }}
       />
       <Box
@@ -77,10 +77,11 @@ function Cadastro() {
           margin="normal"
           value={usuario.nome}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 5,
-            width: '130%' }}
+            width: "130%",
+          }}
         />
         <TextField
           required
@@ -90,10 +91,11 @@ function Cadastro() {
           margin="normal"
           value={usuario.email}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 5,
-            width: '130%' }}
+            width: "130%",
+          }}
         />
         <TextField
           required
@@ -104,10 +106,11 @@ function Cadastro() {
           type="password"
           value={usuario.senha}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 5,
-            width: '130%'}}
+            width: "130%",
+          }}
         />
         <TextField
           required
@@ -117,26 +120,20 @@ function Cadastro() {
           margin="normal"
           value={usuario.cpf}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 5,
-            width: '130%'}}
+            width: "130%",
+          }}
         />
         <Button
           type="submit"
           variant="contained"
           sx={{ mt: 1, mb: 1, backgroundColor: "#FF0802" }}
-          component={Link}
-          to = "/"
         >
-
           Cadastrar
         </Button>
-        <Button
-          sx={{ mt: 1, color: "white" }}
-          component={Link}
-          to="/"
-        >
+        <Button sx={{ mt: 1, color: "white" }} component={Link} to="/">
           Já está cadastrado? Clique aqui
         </Button>
       </Box>

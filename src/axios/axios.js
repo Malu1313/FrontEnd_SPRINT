@@ -10,7 +10,7 @@ const api = axios.create({
 const sheets = {
     postCadastro:(usuario)=>api.post("/usuario", usuario),
     postLogin:(usuario)=>api.post("/login", usuario),
-    getSalas:()=>api.get("/sala")
+    getSala:()=>api.get("/salas")
 }
 
 export default sheets;

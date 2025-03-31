@@ -2,9 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
-import Sala from "./pages/Salas";
 import DefaultLayout from "./components/DefaultLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ListSalas from "./pages/Salas";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -26,10 +27,13 @@ function App() {
             </DefaultLayout>
           }
         />
-        <Route path="/sala" 
+        <Route path="/salas" 
         element={
           <ProtectedRoutes>
-        <Sala />
+           
+        <ListSalas />
+        
+        
         </ProtectedRoutes>
         } />
       </Routes>

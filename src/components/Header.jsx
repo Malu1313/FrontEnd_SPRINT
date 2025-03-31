@@ -6,7 +6,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const Header = () => {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#B30E0A", width: "100%",
-    height: "50px" }}>
+    height: "45px" }}>
       {/*<Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
         {/*<IconButton
           color="inherit"

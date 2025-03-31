@@ -8,8 +8,8 @@ const Footer = () => {
       sx={{
         backgroundColor: "#B30E0A",
         width: "100%",
-        height: "50px",
-        position: "fixed",
+        height: "35px", //Define o tamanho
+        position: "fixed", //Define a posição que ficará na pagina
         bottom: 0,
         display: "flex",
         justifyContent: "center", // Alinha o texto horizontalmente
