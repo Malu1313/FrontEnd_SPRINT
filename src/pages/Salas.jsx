@@ -11,15 +11,15 @@ import TableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import api from '../axios/axios'
 import { Button } from '@mui/material';
-import { Link , useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-function listSalas() {
+function ListSalas() {
   const [sala ,setSala] = useState([]);
   const navigate = useNavigate();
 
-  async function getSala(){
+  async function getSalas(){
     // Chamada da Api
-    await api.getSala().then(
+    await api.getSalas().then(
       (response)=>{
         console.log(response.data.sala)
         setSala(response.data.sala)
@@ -29,12 +29,12 @@ function listSalas() {
     )
   }
 
-  const listSalas = sala.map((sala)=>{
+  const ListSalas = sala.map((sala)=>{
     return(
       <TableRow key={sala.id_sala}>
-        <TableCell align="center">{sala.numero}</TableCell>
-        <TableCell align="center">{sala.capacidade}</TableCell>
-        <TableCell align="center">{sala.descricao}</TableCell>
+        <TableCell align="center">{numero}</TableCell>
+        <TableCell align="center">{capacidade}</TableCell>
+        <TableCell align="center">{descricao}</TableCell>
       </TableRow>
     )
   })
@@ -45,7 +45,7 @@ function listSalas() {
   }
 
   useEffect(()=>{
-    getSala();
+    getSalas();
   },[]);
 
 
@@ -67,7 +67,7 @@ function listSalas() {
                   <TableCell align="center">Capacidade</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>{listSalas}</TableBody>
+              <TableBody>{ListSalas}</TableBody>
             </Table>
           </TableContainer>
           <Button fullWidth variant="contained" onClick={logout} sx={{ backgroundColor: "red" }}>
@@ -78,4 +78,4 @@ function listSalas() {
     </div>
   );
 }
-export default listSalas;
+export default ListSalas;
