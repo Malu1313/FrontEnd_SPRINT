@@ -1,84 +1,69 @@
-import { useState, useEffect } from "react";
+import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import api from "../axios/axios";
-import { Button } from "@mui/material";
+import { Box, Typography, Button, Paper, IconButton } from "@mui/material";
+import logosenai from "../assets/logo-senai.png";
+import LogoutIcon from '@mui/icons-material/Logout';
 
-function SalaDetalhes() {
-    const { state } = useLocation();
+export default function SalaDetalhes() {
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const [sala, setSala] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const idSala = state?.sala?.id_sala;
+  const sala = state?.sala;
 
-    if (!idSala) {
-      setError("Sala não informada.");
-      setLoading(false);
-      return;
-    }
+  if (!sala) {
+    return <Typography>Erro: dados da sala não encontrados.</Typography>;
+  }
 
-    const fetchSalaDetails = async () => {
-      try {
-        const response = await api.get(`/sala/${idSala}`);
-        console.log("Detalhes da sala:", response.data.sala);
-        setSala(response.data.sala);
-      } catch (err) {
-        console.error("Erro ao buscar detalhes da sala:", err);
-        setError("Erro ao carregar os detalhes da sala.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSalaDetails();
-  }, [state]);
-
-  if (loading) return <p>Carregando detalhes da sala...</p>;
-  if (error) return <p>{error}</p>;
+  const handleLogout = () => {
+    localStorage.removeItem("authenticated");
+    navigate("/");
+  };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#ffffff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: 40,
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#D9D9D9",
-          borderRadius: "10px",
-          boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
-          padding: "20px",
-          width: "90%",
-          maxWidth: 600,
-          textAlign: "center",
-        }}
-      >
-        <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>Detalhes da Sala</h2>
-        <p><strong>Número:</strong> {sala.numero}</p>
-        <p><strong>Descrição:</strong> {sala.descricao}</p>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Topo vermelho com logo (sem ícone de pessoa) */}
+      <Box sx={{ backgroundColor: "#b71c1c", height: 50, display: "flex", alignItems: "center", justifyContent: "start", px: 2 }}>
+        <img src={logosenai} alt="SENAI" style={{ height: 40 }} />
+      </Box>
 
-        <Button
-          variant="contained"
-          onClick={() => navigate("/salas")}
-          style={{
-            marginTop: 20,
-            backgroundColor: "#1976d2",
-            borderRadius: "8px",
-            fontWeight: "bold",
-          }}
-        >
-          Voltar
-        </Button>
-      </div>
-    </div>
+      {/* Nome da sala */}
+      <Box sx={{ backgroundColor: "#f0f0f0", px: 4, py: 1, mt: 4 }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{sala.numero}</Typography>
+      </Box>
+
+      {/* Conteúdo principal */}
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', px: 2, alignItems: 'center', justifyContent: 'center' }}>
+        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>Descrição :</Typography>
+        <Paper elevation={2} sx={{ padding: 2, mb: 4, width: '100%', maxWidth: 500, backgroundColor: '#f0f0f0' }}>
+          {sala.descricao}
+        </Paper>
+
+        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>Capacidade :</Typography>
+        <Paper elevation={2} sx={{ padding: 2, mb: 3, width: '100%', maxWidth: 500, backgroundColor: '#f0f0f0' }}>
+          Máxima : {sala.capacidade} alunos
+        </Paper>
+
+        <Box textAlign="left">
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#b71c1c",
+              '&:hover': { backgroundColor: "#a31818" },
+              width: 150
+            }}
+          >
+            Agendar
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Rodapé com ícone de logout no canto inferior direito */}
+      <Box sx={{ backgroundColor: "#b71c1c", height: 40, display: "flex", alignItems: "center", justifyContent: "space-between", px: 2 }}>
+        <Box sx={{ color: "white", fontSize: 24 }}>⏎</Box>
+        <IconButton onClick={handleLogout} sx={{ color: "#fff" }}>
+          <LogoutIcon />
+        </IconButton>
+      </Box>
+    </Box>
   );
 }
-
-export default SalaDetalhes;
