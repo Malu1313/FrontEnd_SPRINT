@@ -6,8 +6,9 @@ import "react-calendar/dist/Calendar.css";
 import logosenai from "../assets/logo-senai.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import axios from "axios";
 
-export default function Calendario() {
+export default function CalendarioReserva() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const sala = state?.sala;
@@ -24,14 +25,32 @@ export default function Calendario() {
     navigate("/");
   };
 
-  const handleConfirmarReserva = () => {
+  const handleConfirmarReserva = async () => {
     if (!selectedTime) {
       alert("Por favor, selecione um horário!");
       return;
     }
-    alert(`Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} às ${selectedTime}`);
-    navigate("/salas");
+  
+    const reservaData = {
+      salaId: sala.id, // se for id mesmo, ok
+      numero: sala.numero,
+      data: selectedDate.toISOString().split('T')[0], // Fica no formato "2025-04-28"
+      hora: selectedTime,
+    };
+  
+    console.log("Dados da reserva:", reservaData);
+  
+    try {
+      await axios.post('http://10.89.240.89:5000/projeto_senai/reservas', reservaData);
+      alert(`Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} às ${selectedTime}`);
+      navigate("/salas");
+    } catch (error) {
+      console.error("Erro ao reservar a sala:", error.response?.data || error.message);
+      alert("Houve um erro ao realizar a reserva.");
+    }
   };
+  
+  
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
