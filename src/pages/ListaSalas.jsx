@@ -7,6 +7,7 @@ import {
   TableCell,
   Paper,
   Button,
+  Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import api from "../axios/axios";
@@ -41,7 +42,7 @@ function ListSalas() {
   }, []);
 
   return (
-    <div
+    <Box
       style={{
         minHeight: "100vh",
         backgroundColor: "#ffffff",
@@ -54,7 +55,7 @@ function ListSalas() {
       {salas.length === 0 ? (
         <p>Carregando Salas...</p>
       ) : (
-        <div
+        <Box
           style={{
             backgroundColor: "#D9D9D9",
             borderRadius: "10px",
@@ -75,7 +76,7 @@ function ListSalas() {
               backgroundColor: "#D9D9D9",
               boxShadow: "none",
               width: "90%",
-              maxWidth: 800,
+              maxWidth: 1500,
             }}
           >
             <Table>
@@ -125,9 +126,9 @@ function ListSalas() {
           >
             sair
           </Button>
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

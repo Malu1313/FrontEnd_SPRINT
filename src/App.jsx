@@ -7,6 +7,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import ListSalas from "./pages/ListaSalas";
 import Footer from "./components/Footer";
 import SalaDetalhes from "./pages/Descricao";
+import Reservar from "./pages/Calendario"; // Já tá certo o nome
 
 function App() {
   return (
@@ -44,6 +45,18 @@ function App() {
             </ProtectedRoutes>
           }
         />
+        
+        {/* ADICIONAR ESTA PARTE */}
+        <Route
+          path="/calendario"
+          element={
+            <ProtectedRoutes>
+              <Reservar />
+            </ProtectedRoutes>
+          }
+        />
+        {/* FIM */}
+
       </Routes>
     </Router>
   );

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Paper, IconButton } from "@mui/material";
 import logosenai from "../assets/logo-senai.png";
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 export default function SalaDetalhes() {
   const { state } = useLocation();
@@ -22,9 +23,23 @@ export default function SalaDetalhes() {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Topo vermelho com logo (sem ícone de pessoa) */}
-      <Box sx={{ backgroundColor: "#b71c1c", height: 50, display: "flex", alignItems: "center", justifyContent: "start", px: 2 }}>
-        <img src={logosenai} alt="SENAI" style={{ height: 40 }} />
-      </Box>
+      <Box
+  sx={{
+    backgroundColor: "#b71c1c",
+    height: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between", // Agora o logo fica à esquerda e o ícone à direita
+    px: 2,
+  }}
+>
+  <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
+  
+  <IconButton sx={{ color: "black" }}>
+    <PersonOutlineIcon />
+  </IconButton>
+</Box>
+
 
       {/* Nome da sala */}
       <Box sx={{ backgroundColor: "#f0f0f0", px: 4, py: 1, mt: 4 }}>
@@ -43,24 +58,31 @@ export default function SalaDetalhes() {
           Máxima : {sala.capacidade} alunos
         </Paper>
 
-        <Box textAlign="left">
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#b71c1c",
-              '&:hover': { backgroundColor: "#a31818" },
-              width: 150
-            }}
-          >
-            Agendar
-          </Button>
-        </Box>
+        <Button
+  variant="contained"
+  onClick={() => navigate("/calendario", { state: { sala } })}
+  sx={{
+    backgroundColor: "#b71c1c",
+    '&:hover': { backgroundColor: "#a31818" },
+    width: 150
+  }}
+>
+  Agendar
+</Button>
+
       </Box>
 
-      {/* Rodapé com ícone de logout no canto inferior direito */}
-      <Box sx={{ backgroundColor: "#b71c1c", height: 40, display: "flex", alignItems: "center", justifyContent: "space-between", px: 2 }}>
-        <Box sx={{ color: "white", fontSize: 24 }}>⏎</Box>
-        <IconButton onClick={handleLogout} sx={{ color: "#fff" }}>
+      <Box
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 2,
+        }}
+      >
+        <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>
       </Box>
