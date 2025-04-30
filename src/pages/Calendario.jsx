@@ -6,15 +6,18 @@ import "react-calendar/dist/Calendar.css";
 import logosenai from "../assets/logo-senai.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import axios from "axios";
+import api from "../axios/axios"; // Instância axios configurada com o token
 
 export default function CalendarioReserva() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const sala = state?.sala;
+  const {sala, idUser} = state;
+
+  console.log("Sala: ", sala.id_sala, "Id_Usuario: ", idUser);
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectedTime, setSelectedTime] = React.useState("");
+  const [selectedTimeInicio, setSelectedTimeInicio] = React.useState("");
+  const [selectedTimeFim, setSelectedTimeFim] = React.useState("");
 
   if (!sala) {
     return <Typography>Erro: dados da sala não encontrados.</Typography>;
@@ -26,31 +29,29 @@ export default function CalendarioReserva() {
   };
 
   const handleConfirmarReserva = async () => {
-    if (!selectedTime) {
-      alert("Por favor, selecione um horário!");
+    if (!selectedTimeInicio || !selectedTimeFim) {
+      alert("Por favor, selecione os horários de início e fim!");
       return;
     }
-  
+    
     const reservaData = {
-      salaId: sala.id, // se for id mesmo, ok
-      numero: sala.numero,
-      data: selectedDate.toISOString().split('T')[0], // Fica no formato "2025-04-28"
-      hora: selectedTime,
+      fk_id_sala: sala.id_sala,  // Número da sala (não o id)
+      fk_id_usuario:idUser,
+      datahora_inicio: selectedDate.toISOString().split('T')[0] + 'T' + selectedTimeInicio, // data e hora início
+      datahora_fim: selectedDate.toISOString().split('T')[0] + 'T' + selectedTimeFim,   // data e hora fim
     };
-  
     console.log("Dados da reserva:", reservaData);
-  
-    try {
-      await axios.post('http://10.89.240.89:5000/projeto_senai/reservas', reservaData);
-      alert(`Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} às ${selectedTime}`);
-      navigate("/salas");
+
+    try {      
+      const response = await api.postReserva(reservaData);
+      alert(response.data.message);
+      alert(`Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} de ${selectedTimeInicio} até ${selectedTimeFim}`);
+      navigate("/salas",{ state: { idUser } });
     } catch (error) {
-      console.error("Erro ao reservar a sala:", error.response?.data || error.message);
-      alert("Houve um erro ao realizar a reserva.");
+      console.log("Erro ao reservar a sala:", error.response?.data || error.message);
+      alert(error.response.data.error);
     }
   };
-  
-  
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -88,20 +89,28 @@ export default function CalendarioReserva() {
         </Typography>
 
         <Paper elevation={2} sx={{ p: 2, backgroundColor: "#f0f0f0", mb: 4 }}>
-          <Calendar
-            onChange={setSelectedDate}
-            value={selectedDate}
-          />
+          <Calendar onChange={setSelectedDate} value={selectedDate} />
         </Paper>
 
         <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
-          Escolha o horário
+          Escolha o horário de início
         </Typography>
 
         <TextField
           type="time"
-          value={selectedTime}
-          onChange={(e) => setSelectedTime(e.target.value)}
+          value={selectedTimeInicio}
+          onChange={(e) => setSelectedTimeInicio(e.target.value)}
+          sx={{ mb: 3 }}
+        />
+
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+          Escolha o horário de término
+        </Typography>
+
+        <TextField
+          type="time"
+          value={selectedTimeFim}
+          onChange={(e) => setSelectedTimeFim(e.target.value)}
           sx={{ mb: 3 }}
         />
 

@@ -27,8 +27,8 @@ function Login() {
       const response = await api.postLogin(usuario);
       console.log(response.data.message)
       alert(response.data.message);
-      localStorage.setItem('authenticated', true)
-      navigate("/salas");
+      localStorage.setItem('authenticated', true)      
+      navigate("/salas", { state: { idUser: response.data.user.id_usuario } });
     } catch (error) {
       console.error(error);
       alert(error.response.data.error);

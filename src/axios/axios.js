@@ -11,7 +11,8 @@ const sheets = {
     postCadastro:(usuario)=>api.post("/usuario", usuario),
     postLogin:(usuario)=>api.post("/login", usuario),
     getSala:()=>api.get("/salas"),
-    postReserva: (reserva) => api.post("/reserva"),
+    postReserva: (reserva) => api.post("/reserva", reserva),
+    getSalasDisponiveis: () => api.get("/disponiveis"), // Corrigido para o endpoint correto
 
 }
 

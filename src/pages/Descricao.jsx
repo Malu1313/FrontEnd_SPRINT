@@ -1,20 +1,24 @@
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography, Button, Paper, IconButton } from "@mui/material";
+import { Box, Typography, Button, Paper, IconButton, Modal, List, ListItem, ListItemText, CircularProgress } from "@mui/material";
 import logosenai from "../assets/logo-senai.png";
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import api from "../axios/axios"; // Instância axios configurada com o token
 
 export default function SalaDetalhes() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const sala = state?.sala;
+  const {sala, idUser} = state;
+
+  console.log("Sala: ", sala.id_sala, "Id_Usuario: ", idUser);
 
   if (!sala) {
     return <Typography>Erro: dados da sala não encontrados.</Typography>;
   }
 
+  // Função para logout
   const handleLogout = () => {
     localStorage.removeItem("authenticated");
     navigate("/");
@@ -22,24 +26,22 @@ export default function SalaDetalhes() {
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Topo vermelho com logo (sem ícone de pessoa) */}
+      {/* Topo vermelho com logo */}
       <Box
-  sx={{
-    backgroundColor: "#b71c1c",
-    height: 50,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between", // Agora o logo fica à esquerda e o ícone à direita
-    px: 2,
-  }}
->
-  <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
-  
-  <IconButton sx={{ color: "black" }}>
-    <PersonOutlineIcon />
-  </IconButton>
-</Box>
-
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 50,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 2,
+        }}
+      >
+        <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
+        <IconButton sx={{ color: "black" }}>
+          <PersonOutlineIcon />
+        </IconButton>
+      </Box>
 
       {/* Nome da sala */}
       <Box sx={{ backgroundColor: "#f0f0f0", px: 4, py: 1, mt: 4 }}>
@@ -58,20 +60,24 @@ export default function SalaDetalhes() {
           Máxima : {sala.capacidade} alunos
         </Paper>
 
-        <Button
-  variant="contained"
-  onClick={() => navigate("/calendario", { state: { sala } })}
-  sx={{
-    backgroundColor: "#b71c1c",
-    '&:hover': { backgroundColor: "#a31818" },
-    width: 150
-  }}
->
-  Agendar
-</Button>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button
+            variant="contained"
+            onClick={() => navigate("/calendario", { state: { sala, idUser} })}
+            sx={{
+              backgroundColor: "#b71c1c",
+              '&:hover': { backgroundColor: "#a31818" },
+              width: 150
+            }}
+          >
+            Agendar
+          </Button>
 
+         
+        </Box>
       </Box>
 
+      {/* Footer com logout */}
       <Box
         sx={{
           backgroundColor: "#b71c1c",
@@ -86,6 +92,10 @@ export default function SalaDetalhes() {
           <LogoutIcon />
         </IconButton>
       </Box>
-    </Box>
+
+     
+        </Box>
+      
+    
   );
 }

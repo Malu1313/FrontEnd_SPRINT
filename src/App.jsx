@@ -46,7 +46,7 @@ function App() {
           }
         />
         
-        {/* ADICIONAR ESTA PARTE */}
+        
         <Route
           path="/calendario"
           element={
@@ -55,7 +55,8 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        {/* FIM */}
+        
+       
 
       </Routes>
     </Router>

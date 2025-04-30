@@ -8,30 +8,34 @@ import {
   Paper,
   Button,
   Box,
+  TextField,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../axios/axios";
 
 function ListSalas() {
   const [salas, setSalas] = useState([]);
+  const [busca, setBusca] = useState(""); // <-- Novo estado para a busca
   const navigate = useNavigate();
+  const { state } = useLocation();
 
-  // Busca as salas da API
+  const idUser = state.idUser;
+
+  console.log("id usuario: ", idUser);
+
   async function getSalas() {
     try {
-      const response = await api.getSala(); // deve ser algo tipo api.get("/salas")
+      const response = await api.getSala();
       setSalas(response.data.sala);
     } catch (error) {
       console.error("Erro ao buscar salas:", error);
     }
   }
 
-  // Quando clica em uma linha, vai para a descrição da sala
   const handleRowClick = (sala) => {
-    navigate("/descricao", { state: { sala } });
+    navigate("/descricao", { state: { sala, idUser } });
   };
 
-  // Logout
   function logout() {
     localStorage.removeItem("authenticated");
     navigate("/");
@@ -40,6 +44,11 @@ function ListSalas() {
   useEffect(() => {
     getSalas();
   }, []);
+
+  // Filtra as salas com base no que foi digitado
+  const salasFiltradas = salas.filter((sala) =>
+    sala.numero.toString().includes(busca.trim())
+  );
 
   return (
     <Box
@@ -64,11 +73,23 @@ function ListSalas() {
             width: "100%",
             maxWidth: 1200,
             textAlign: "center",
+            
           }}
         >
           <h1 style={{ fontSize: "24px", marginBottom: "20px", fontWeight: "bold" }}>
             Salas disponíveis
           </h1>
+
+          {/* Campo de busca */}
+          <TextField
+           fullWidth
+            label="Buscar sala por identificação"
+            variant="outlined" 
+            size="small"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            style={{ backgroundColor: "#fff", borderRadius: "5px" , width: "850px"}}
+          />
 
           <TableContainer
             component={Paper}
@@ -81,33 +102,39 @@ function ListSalas() {
           >
             <Table>
               <TableBody>
-                {salas.map((sala) => (
-                  <TableRow
-                    key={sala.id_sala}
-                    onClick={() => handleRowClick(sala)}
-                    style={{ cursor: "pointer" }}
-                    sx={{
-                      backgroundColor: "#f0f0f0",
-                      borderRadius: "8px",
-                      margin: "10px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "50px",
-                    }}
-                  >
-                    <TableCell
-                      align="center"
+                {salasFiltradas.length > 0 ? (
+                  salasFiltradas.map((sala) => (
+                    <TableRow
+                      key={sala.id_sala}
+                      onClick={() => handleRowClick(sala)}
+                      style={{ cursor: "pointer" }}
                       sx={{
-                        borderBottom: "none",
-                        fontSize: "16px",
-                        fontWeight: "bold",
+                        backgroundColor: "#f0f0f0",
+                        borderRadius: "8px",
+                        margin: "10px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "50px",
                       }}
                     >
-                      {sala.numero}
-                    </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          borderBottom: "none",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {sala.numero}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center">Nenhuma sala encontrada</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
