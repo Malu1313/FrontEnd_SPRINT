@@ -12,8 +12,7 @@ const sheets = {
     postLogin:(usuario)=>api.post("/login", usuario),
     getSala:()=>api.get("/salas"),
     postReserva: (reserva) => api.post("/reserva", reserva),
-    getSalasDisponiveis: () => api.get("/disponiveis"), // Corrigido para o endpoint correto
-
-}
+    getAllReservasPorSala: (id_sala) => api.get(`/reservas/${id_sala}`)
+};
 
 export default sheets;

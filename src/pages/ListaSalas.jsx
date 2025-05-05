@@ -15,13 +15,13 @@ import api from "../axios/axios";
 
 function ListSalas() {
   const [salas, setSalas] = useState([]);
-  const [busca, setBusca] = useState(""); // <-- Novo estado para a busca
+  const [busca, setBusca] = useState(""); 
+  const [dataBusca, setDataBusca] = useState("");
+  const [horarioBusca, setHorarioBusca] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
 
   const idUser = state.idUser;
-
-  console.log("id usuario: ", idUser);
 
   async function getSalas() {
     try {
@@ -45,10 +45,34 @@ function ListSalas() {
     getSalas();
   }, []);
 
+  // Função para formatar a data para o formato ISO 8601
+  const formatDate = (date) => {
+    const newDate = new Date(date);
+    return newDate.toISOString().split('T')[0];  // Retorna no formato 'YYYY-MM-DD'
+  };
+
   // Filtra as salas com base no que foi digitado
-  const salasFiltradas = salas.filter((sala) =>
-    sala.numero.toString().includes(busca.trim())
-  );
+  const salasFiltradas = salas.filter((sala) => {
+    const reservas = sala.reservas || []; // Garantir que sempre há um array de reservas
+    
+    // Verificar a data
+    const dataCorreta = dataBusca
+      ? reservas.some((reserva) => formatDate(reserva.data) === dataBusca)
+      : true;
+
+    // Verificar o horário
+    const horarioCorreto = horarioBusca
+      ? reservas.some(
+          (reserva) =>
+            reserva.horario_inicio <= horarioBusca && reserva.horario_fim >= horarioBusca
+        )
+      : true;
+  
+    // Verificar o número da sala
+    const numeroCorreto = sala.numero.toString().includes(busca.trim());
+  
+    return dataCorreta && horarioCorreto && numeroCorreto;
+  });
 
   return (
     <Box
@@ -73,22 +97,21 @@ function ListSalas() {
             width: "100%",
             maxWidth: 1200,
             textAlign: "center",
-            
+
           }}
         >
           <h1 style={{ fontSize: "24px", marginBottom: "20px", fontWeight: "bold" }}>
             Salas disponíveis
           </h1>
 
-          {/* Campo de busca */}
           <TextField
-           fullWidth
+            fullWidth
             label="Buscar sala por identificação"
-            variant="outlined" 
+            variant="outlined"
             size="small"
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            style={{ backgroundColor: "#fff", borderRadius: "5px" , width: "850px"}}
+            style={{ backgroundColor: "#fff", borderRadius: "5px", marginBottom: "10px", width:"80%" }}
           />
 
           <TableContainer
@@ -151,7 +174,7 @@ function ListSalas() {
               borderRadius: "8px",
             }}
           >
-            sair
+            Sair
           </Button>
         </Box>
       )}
