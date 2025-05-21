@@ -8,6 +8,8 @@ import ListSalas from "./pages/ListaSalas";
 import Footer from "./components/Footer";
 import SalaDetalhes from "./pages/Descricao";
 import Reservar from "./pages/Calendario"; // Já tá certo o nome
+import Perfil from "./pages/Perfil";
+
 
 function App() {
   return (
@@ -34,6 +36,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <ListSalas />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoutes>
+              <Perfil/>
             </ProtectedRoutes>
           }
         />

@@ -6,7 +6,6 @@ import Container from "@mui/material/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios/axios";
-
 import logosenai from "../assets/logo-senai.png";
 
 function Cadastro() {

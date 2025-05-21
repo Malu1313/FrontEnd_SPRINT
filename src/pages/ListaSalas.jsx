@@ -11,7 +11,9 @@ import {
   TextField,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import api from "../axios/axios";
+import logosenai from "../assets/logo-senai.png";
 
 function ListSalas() {
   const [salas, setSalas] = useState([]);
@@ -45,22 +47,18 @@ function ListSalas() {
     getSalas();
   }, []);
 
-  // Função para formatar a data para o formato ISO 8601
   const formatDate = (date) => {
     const newDate = new Date(date);
-    return newDate.toISOString().split('T')[0];  // Retorna no formato 'YYYY-MM-DD'
+    return newDate.toISOString().split('T')[0];
   };
 
-  // Filtra as salas com base no que foi digitado
   const salasFiltradas = salas.filter((sala) => {
-    const reservas = sala.reservas || []; // Garantir que sempre há um array de reservas
-    
-    // Verificar a data
+    const reservas = sala.reservas || [];
+
     const dataCorreta = dataBusca
       ? reservas.some((reserva) => formatDate(reserva.data) === dataBusca)
       : true;
 
-    // Verificar o horário
     const horarioCorreto = horarioBusca
       ? reservas.some(
           (reserva) =>
@@ -68,7 +66,6 @@ function ListSalas() {
         )
       : true;
   
-    // Verificar o número da sala
     const numeroCorreto = sala.numero.toString().includes(busca.trim());
   
     return dataCorreta && horarioCorreto && numeroCorreto;
@@ -85,6 +82,18 @@ function ListSalas() {
         paddingTop: 40,
       }}
     >
+         <img
+        src={logosenai}
+        alt="Logo do Senai"
+        style={{
+          width: "200px",
+          height: "auto",
+         
+        }}
+      />
+      <h1 style={{ fontSize: "24px", marginBottom: "20px", fontWeight: "bold" }}>
+            Salas disponíveis
+          </h1>
       {salas.length === 0 ? (
         <p>Carregando Salas...</p>
       ) : (
@@ -97,22 +106,34 @@ function ListSalas() {
             width: "100%",
             maxWidth: 1200,
             textAlign: "center",
-
           }}
         >
-          <h1 style={{ fontSize: "24px", marginBottom: "20px", fontWeight: "bold" }}>
-            Salas disponíveis
-          </h1>
+          
 
-          <TextField
-            fullWidth
-            label="Buscar sala por identificação"
-            variant="outlined"
-            size="small"
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            style={{ backgroundColor: "#fff", borderRadius: "5px", marginBottom: "10px", width:"80%" }}
-          />
+          {/* Campo de busca com ícone */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "10px",
+              width: "100%",
+            }}
+          >
+            <TextField
+              label="Buscar sala por identificação"
+              variant="outlined"
+              size="small"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              style={{ backgroundColor: "#fff", borderRadius: "5px", width: "80%" }}
+            />
+            {/* icone de perfil */}
+            <AccountCircleIcon
+           sx={{ marginLeft: "10px", fontSize: 30, cursor: "pointer" }}
+           onClick={() => navigate("/perfil", { state: { idUser } })}
+            />
+          </Box>
 
           <TableContainer
             component={Paper}

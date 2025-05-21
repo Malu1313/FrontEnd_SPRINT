@@ -1,22 +1,28 @@
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Box } from "@mui/material";
+import logosenai from "../assets/logo-senai.png";
 
 const Header = () => {
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#B30E0A", width: "100%",
-    height: "45px" }}>
-      {/*<Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
-        {/*<IconButton
-          color="inherit"
-          onClick={() => {
-            console.log("Cliquei");
-          }}
-        >*/}
-          
-        
-      
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#B30E0A",
+        height: "45px",
+        justifyContent: "center",
+      }}
+    >
+      <Toolbar sx={{ minHeight: "45px !important", px: 2 }}>
+        <Box>
+          <img
+            src={logosenai}
+            alt="Logo do Senai"
+            style={{ width: "120px", height: "auto" }}
+          />
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 };
