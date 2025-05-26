@@ -8,7 +8,6 @@ import { useState } from "react";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
 
-
 function Login() {
   const [usuario, setUser] = useState({
     email: "",
@@ -26,17 +25,19 @@ function Login() {
     event.preventDefault();
     try {
       const response = await api.postLogin(usuario);
-      console.log(response.data.message)
+      console.log(response.data.message);
       alert(response.data.message);
 
       const token = response.data.token;
-      localStorage.setItem("token", token);
+      const id_usuario = response.data.user.id_usuario;
 
-      localStorage.setItem('authenticated', true);      
-      navigate("/salas", { state: { idUser: response.data.user.id_usuario } });
+      localStorage.setItem("token", token);
+      localStorage.setItem("authenticated", true);
+
+      navigate("/salas", { state: { id_usuario } }); // navegação correta
     } catch (error) {
       console.error(error);
-      alert(error.response.data.error);
+      alert(error.response?.data?.error || "Erro ao fazer login");
     }
   };
 
@@ -54,14 +55,13 @@ function Login() {
       }}
     >
       <img
-            src={logosenai}
-            alt="Logo do Senai"
-            style={{
-              width: "200px", // Define o tamanho da imagem
-              height: "auto", // Mantém a proporção da imagem
-              //marginBottom: "1px", // Espaço abaixo da imagem
-            }}
-          />
+        src={logosenai}
+        alt="Logo do Senai"
+        style={{
+          width: "200px",
+          height: "auto",
+        }}
+      />
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -73,7 +73,6 @@ function Login() {
           alignItems: "center",
         }}
       >
-        
         <TextField
           required
           id="email"
@@ -82,11 +81,10 @@ function Login() {
           margin="normal"
           value={usuario.email}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 3,
             width: '100%',
-            
           }}
         />
         <TextField
@@ -98,12 +96,12 @@ function Login() {
           type="password"
           value={usuario.senha}
           onChange={onChange}
-          sx={{ 
-            backgroundColor: "white", 
+          sx={{
+            backgroundColor: "white",
             borderRadius: 3,
-            width: '100%'}}
+            width: '100%'
+          }}
         />
-        
         <Button
           type="submit"
           variant="contained"

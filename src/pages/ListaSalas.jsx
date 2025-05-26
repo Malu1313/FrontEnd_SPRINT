@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
 
@@ -129,10 +129,11 @@ function ListSalas() {
               style={{ backgroundColor: "#fff", borderRadius: "5px", width: "80%" }}
             />
             {/* icone de perfil */}
-            <AccountCircleIcon
-           sx={{ marginLeft: "10px", fontSize: 30, cursor: "pointer" }}
-           onClick={() => navigate("/perfil", { state: { idUser } })}
-            />
+           <PersonOutlineIcon
+          sx={{ marginLeft: "10px", fontSize: 30, cursor: "pointer", color: "black" }}
+         onClick={() => navigate("/perfil", { state: { idUser } })}
+          />
+
           </Box>
 
           <TableContainer
