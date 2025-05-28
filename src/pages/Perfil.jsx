@@ -5,7 +5,6 @@ import {
   Button,
   IconButton,
   Avatar,
-  Typography,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -26,19 +25,6 @@ function Perfil() {
     senha: "",
   });
 
-  useEffect(() => {
-    async function fetchUsuario() {
-      try {
-        const response = await api.getUsuario(id_usuario);
-        setUsuario(response.data.usuario);
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-        alert("Erro ao buscar dados do usuário.");
-      }
-    }
-
-    fetchUsuario();
-  }, [id_usuario]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -152,7 +138,7 @@ function Perfil() {
 
         <Button
           variant="contained"
-          onClick={() => navigate("/minhas-reservas", { state: { id_usuario } })}
+          onClick={() => navigate("/minhasReservas", { state: { id_usuario } })}
           sx={{
             backgroundColor: "#b20000",
             color: "white",

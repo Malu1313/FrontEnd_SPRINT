@@ -54,10 +54,11 @@ export default function SalaDetalhes() {
         }}
       >
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
-           <PersonOutlineIcon
+        <PersonOutlineIcon
           sx={{ marginLeft: "10px", fontSize: 30, cursor: "pointer", color: "black" }}
          onClick={() => navigate("/perfil", { state: { idUser } })}
           />
+
       </Box>
 
       {/* Nome da sala */}

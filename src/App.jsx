@@ -5,10 +5,10 @@ import Cadastro from "./pages/Cadastro";
 import DefaultLayout from "./components/DefaultLayout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import ListSalas from "./pages/ListaSalas";
-import Footer from "./components/Footer";
 import SalaDetalhes from "./pages/Descricao";
 import Reservar from "./pages/Calendario"; // Já tá certo o nome
 import Perfil from "./pages/Perfil";
+import Minhas_Reservas from "./pages/minhas_Reservas";
 
 
 function App() {
@@ -36,6 +36,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <ListSalas />
+            </ProtectedRoutes>
+          }
+        />
+          <Route
+          path="/MinhasReservas"
+          element={
+            <ProtectedRoutes>
+              <Minhas_Reservas />
             </ProtectedRoutes>
           }
         />

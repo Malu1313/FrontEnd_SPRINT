@@ -31,13 +31,15 @@ function Login() {
       const token = response.data.token;
       const id_usuario = response.data.user.id_usuario;
 
+      // SALVA NO LOCALSTORAGE
       localStorage.setItem("token", token);
-      localStorage.setItem("authenticated", true);
+      localStorage.setItem("id_usuario", id_usuario);
+      localStorage.setItem("authenticated", "true");
 
-      navigate("/salas", { state: { id_usuario } }); // navegação correta
+      navigate("/salas", { state: { idUser: id_usuario } });
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.error || "Erro ao fazer login");
+      alert(error.response?.data?.error || "Erro no login.");
     }
   };
 
@@ -57,10 +59,7 @@ function Login() {
       <img
         src={logosenai}
         alt="Logo do Senai"
-        style={{
-          width: "200px",
-          height: "auto",
-        }}
+        style={{ width: "200px", height: "auto" }}
       />
       <Box
         component="form"
@@ -84,7 +83,7 @@ function Login() {
           sx={{
             backgroundColor: "white",
             borderRadius: 3,
-            width: '100%',
+            width: "100%",
           }}
         />
         <TextField
@@ -99,9 +98,10 @@ function Login() {
           sx={{
             backgroundColor: "white",
             borderRadius: 3,
-            width: '100%'
+            width: "100%",
           }}
         />
+
         <Button
           type="submit"
           variant="contained"
