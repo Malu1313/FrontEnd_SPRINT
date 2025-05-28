@@ -8,7 +8,7 @@ import {
   CircularProgress,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -34,10 +34,11 @@ function MinhasReservas() {
     setIdUsuario(idFromStorage);
   }, [navigate]);
 
-  useEffect(() => {
-    if (!idUsuario) return;
-
-    sheets.getReservasPorUsuario(idUsuario)
+  // Função para carregar reservas do usuário
+  const carregarReservas = () => {
+    setLoading(true);
+    sheets
+      .getReservasPorUsuario(idUsuario)
       .then((response) => {
         setReservas(response.data.reservas || []);
       })
@@ -47,6 +48,12 @@ function MinhasReservas() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (idUsuario) {
+      carregarReservas();
+    }
   }, [idUsuario]);
 
   const handleLogout = () => {
@@ -56,21 +63,65 @@ function MinhasReservas() {
   };
 
   const formatarDataHora = (inicio, fim) => {
-    const data = new Date(inicio).toLocaleDateString("pt-BR");
-    const horaInicio = new Date(inicio).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-    const horaFim = new Date(fim).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-    return `${data} - ${horaInicio} até ${horaFim}`;
+    const [dataInicio, horaInicio] = inicio.split("T");
+    const [dataFim, horaFim] = fim.split("T");
+
+    const dataFormatada = dataInicio.split("-").reverse().join("/"); // AAAA-MM-DD → DD/MM/AAAA
+    const horaInicioFormatada = horaInicio.slice(0, 5); // "14:00:00.000Z" → "14:00"
+    const horaFimFormatada = horaFim.slice(0, 5);
+
+    return `${dataFormatada} - ${horaInicioFormatada} até ${horaFimFormatada}`;
+  };
+
+  // Função para excluir reserva
+  const excluirReserva = async (idReserva) => {
+    if (!window.confirm("Tem certeza que deseja excluir esta reserva?")) {
+      return;
+    }
+
+    try {
+      await sheets.deleteReserva(idReserva); // Chamada para API excluir reserva
+      // Atualiza a lista chamando API para garantir dados atualizados
+      carregarReservas();
+    } catch (error) {
+      console.error("Erro ao excluir reserva:", error);
+      alert("Erro ao excluir reserva.");
+    }
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* TOPO */}
-      <Box sx={{ backgroundColor: "#b71c1c", height: 50, display: "flex", alignItems: "center", justifyContent: "space-between", px: 2 }}>
+      <Box
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 50,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 2,
+        }}
+      >
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
       </Box>
 
       {/* CONTEÚDO */}
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", mt: 6 }}>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 6,
+        }}
+      >
         <Avatar sx={{ width: 100, height: 100, mb: 2, bgcolor: "#D9D9D9" }}>
           <PersonOutlineIcon sx={{ fontSize: 50, color: "black" }} />
         </Avatar>
@@ -81,41 +132,48 @@ function MinhasReservas() {
 
         {loading ? (
           <CircularProgress />
+        ) : reservas.length > 0 ? (
+          <List sx={{ width: "80%", maxWidth: 400 }}>
+            {reservas.map((reserva) => (
+              <ListItem
+                key={reserva.id_reserva}
+                divider
+                secondaryAction={
+                  <Button
+                    onClick={() => excluirReserva(reserva.id_reserva)}
+                    color="error"
+                    size="small"
+                  >
+                    Excluir
+                  </Button>
+                }
+              >
+                <ListItemText
+                  primary={`Sala: ${reserva.fk_id_sala || "Não informado"}`}
+                  secondary={formatarDataHora(
+                    reserva.datahora_inicio,
+                    reserva.datahora_fim
+                  )}
+                />
+              </ListItem>
+            ))}
+          </List>
         ) : (
-          reservas.length > 0 ? (
-            <List sx={{ width: "80%", maxWidth: 400 }}>
-              {reservas.map((reserva, index) => (
-                <ListItem key={index} divider>
-                  <ListItemText
-                    primary={`Sala: ${reserva.fk_id_sala || "Não informado"}`}
-                    secondary={formatarDataHora(reserva.datahora_inicio, reserva.datahora_fim)}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography>Nenhuma reserva encontrada.</Typography>
-          )
+          <Typography>Nenhuma reserva encontrada.</Typography>
         )}
-
-        <Button
-          variant="contained"
-          onClick={() => navigate("/salas")}
-          sx={{
-            backgroundColor: "#b20000",
-            color: "white",
-            borderRadius: "10px",
-            mt: 4,
-            width: 160,
-            "&:hover": { backgroundColor: "#8c0000" },
-          }}
-        >
-          Voltar ao início
-        </Button>
       </Box>
 
       {/* RODAPÉ */}
-      <Box sx={{ backgroundColor: "#b71c1c", height: 40, display: "flex", alignItems: "center", justifyContent: "flex-start", px: 2 }}>
+      <Box
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          px: 2,
+        }}
+      >
         <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>
