@@ -12,11 +12,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
 
-
 function Perfil() {
-  const { state } = useLocation();
   const navigate = useNavigate();
-  const { id_usuario } = state;
+  const id_usuario = localStorage.getItem("id_usuario");
+
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -25,6 +24,30 @@ function Perfil() {
     senha: "",
   });
 
+  useEffect(() => {
+    const id_usuario = localStorage.getItem("id_usuario");
+
+      async function fetchUsuario() {
+        try {
+          if (!id_usuario) return; // se não tiver id, não faz nada
+    
+          const response = await api.getUsuario(id_usuario);
+          const userData = response.data.user;
+    
+          setUsuario({
+            nome: userData.nome || "",
+            email: userData.email || "",
+            cpf: userData.cpf || "",
+            senha: "********",
+          });
+        } catch (error) {
+          console.error("Erro ao carregar dados do usuário:", error);
+        }
+      }
+    
+      fetchUsuario();
+    }, [id_usuario]);
+    
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +56,11 @@ function Perfil() {
       [name]: value,
     }));
   };
- const handleLogout = () => {
+
+  const handleLogout = () => {
     localStorage.removeItem("authenticated");
     navigate("/");
   };
-
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", display: "flex", flexDirection: "column" }}>
@@ -163,9 +186,7 @@ function Perfil() {
           px: 2,
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-    
-    </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}></div>
         <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>

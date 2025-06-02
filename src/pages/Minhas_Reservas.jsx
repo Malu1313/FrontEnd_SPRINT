@@ -21,6 +21,8 @@ function MinhasReservas() {
   const [idUsuario, setIdUsuario] = useState(null);
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [exclusaoSucesso, setExclusaoSucesso] = useState(false); 
+  
 
   useEffect(() => {
     const idFromStorage = localStorage.getItem("id_usuario");
@@ -81,8 +83,14 @@ function MinhasReservas() {
 
     try {
       await sheets.deleteReserva(idReserva); // Chamada para API excluir reserva
-      // Atualiza a lista chamando API para garantir dados atualizados
-      carregarReservas();
+      
+      // Atualiza o estado local removendo a reserva excluída
+      setReservas((prevReservas) => 
+        prevReservas.filter((reserva) => reserva.id_reserva !== idReserva)
+      );
+
+      setExclusaoSucesso(true);  // Define o estado de sucesso
+      setTimeout(() => setExclusaoSucesso(false), 2000);  // Reseta o feedback após 2 segundos
     } catch (error) {
       console.error("Erro ao excluir reserva:", error);
       alert("Erro ao excluir reserva.");
@@ -160,6 +168,13 @@ function MinhasReservas() {
           </List>
         ) : (
           <Typography>Nenhuma reserva encontrada.</Typography>
+        )}
+
+        {/* Exibição de mensagem de sucesso */}
+        {exclusaoSucesso && (
+          <Typography color="success.main" sx={{ mt: 2 }}>
+            Reserva excluída com sucesso!
+          </Typography>
         )}
       </Box>
 

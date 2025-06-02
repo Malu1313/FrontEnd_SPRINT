@@ -8,14 +8,17 @@ const api = axios.create({
 });
 
 const sheets = {
-    postCadastro:(usuario)=>api.post("/usuario", usuario),
-    postLogin:(usuario)=>api.post("/login", usuario),
-    getSala:()=>api.get("/salas"),
-    postReserva: (reserva) => api.post("/reserva", reserva),
-    getAllReservasPorSala: (id_sala) => api.get(`/reservas/${id_sala}`),
-    getUsuario: (id_usuario) => api.get(`/usuario/${id_usuario}`),
-    getReservasPorUsuario: (id_usuario) => api.get(`/reservas/usuario/${id_usuario}`),
-    deleteReserva: (id_reserva) => api.delete(`/reserva/${id_reserva}`),
-};
+    
+        postCadastro: (usuario) => api.post("/usuario", usuario),
+        postLogin: (usuario) => api.post("/login", usuario),
+        getSala: () => api.get("/salas"),
+        postReserva: (reserva) => api.post("/reserva", reserva),
+        getAllReservasPorSala: (id_sala) => api.get(`/reservas/${id_sala}`),
+        getUsuario: (id_usuario) => api.get(`/usuario/${id_usuario}`), // corrigido aqui
+        getReservasPorUsuario: (id_usuario) => api.get(`/reservas/usuario/${id_usuario}`),
+        deleteReserva: (id_reserva) => api.delete(`/reserva/${id_reserva}`),
+      };
+      
+
 
 export default sheets;
