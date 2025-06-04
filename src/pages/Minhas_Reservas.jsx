@@ -92,7 +92,7 @@ function MinhasReservas() {
       setExclusaoSucesso(true);  // Define o estado de sucesso
       setTimeout(() => setExclusaoSucesso(false), 2000);  // Reseta o feedback após 2 segundos
     } catch (error) {
-      console.error("Erro ao excluir reserva:", error);
+      console.error("Erro ao excluir reserva:", error.response.data.error);
       alert("Erro ao excluir reserva.");
     }
   };

@@ -8,14 +8,15 @@ import {
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
+
 
 function Perfil() {
   const navigate = useNavigate();
   const id_usuario = localStorage.getItem("id_usuario");
-
+  console.log(id_usuario)
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -25,29 +26,26 @@ function Perfil() {
   });
 
   useEffect(() => {
-    const id_usuario = localStorage.getItem("id_usuario");
+    async function fetchUsuario() {
+      try {
+        if (!id_usuario) return;
 
-      async function fetchUsuario() {
-        try {
-          if (!id_usuario) return; // se não tiver id, não faz nada
-    
-          const response = await api.getUsuario(id_usuario);
-          const userData = response.data.user;
-    
-          setUsuario({
-            nome: userData.nome || "",
-            email: userData.email || "",
-            cpf: userData.cpf || "",
-            senha: "********",
-          });
-        } catch (error) {
-          console.error("Erro ao carregar dados do usuário:", error);
-        }
+        const response = await api.getUsuario(id_usuario);
+        const userData = response.data.user;
+
+        setUsuario({
+          nome: userData.nome || "",
+          email: userData.email || "",
+          cpf: userData.cpf || "",
+          senha: "******", // ocultar senha
+        });
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
       }
-    
-      fetchUsuario();
-    }, [id_usuario]);
-    
+    }
+
+    fetchUsuario();
+  }, [id_usuario]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,12 +57,42 @@ function Perfil() {
 
   const handleLogout = () => {
     localStorage.removeItem("authenticated");
+    localStorage.removeItem("id_usuario");
     navigate("/");
   };
 
+
+  async function handleDeleteAccount() {
+    if (!id_usuario) return;
+
+    const confirmDelete = window.confirm(
+      "Tem certeza que deseja excluir sua conta? Essa ação é irreversível."
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await api.deleteUser(id_usuario);
+
+      localStorage.removeItem("authenticated");
+      localStorage.removeItem("id_usuario");
+
+      alert("Conta excluída com sucesso.");
+      navigate("/");
+    } catch (error) {
+      console.error("Erro ao excluir conta:", error.response.data.error);
+      alert("Erro ao excluir conta. Tente novamente.");
+    }
+  }
+
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", display: "flex", flexDirection: "column" }}>
-      {/* TOPO */}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box
         sx={{
           backgroundColor: "#b71c1c",
@@ -77,7 +105,6 @@ function Perfil() {
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
       </Box>
 
-      {/* CONTEÚDO PRINCIPAL */}
       <Box
         sx={{
           flex: 1,
@@ -91,13 +118,20 @@ function Perfil() {
           <PersonOutlineIcon sx={{ fontSize: 50, color: "black" }} />
         </Avatar>
 
-        <Box sx={{ width: "80%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          sx={{
+            width: "80%",
+            maxWidth: 400,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
           <TextField
             label="Nome:"
             name="nome"
             value={usuario.nome}
             onChange={handleChange}
-            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -106,7 +140,6 @@ function Perfil() {
             name="email"
             value={usuario.email}
             onChange={handleChange}
-            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -115,7 +148,6 @@ function Perfil() {
             name="cpf"
             value={usuario.cpf}
             onChange={handleChange}
-            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -131,22 +163,10 @@ function Perfil() {
           />
         </Box>
 
-        {/* BOTÕES */}
         <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
           <Button
             variant="contained"
-            sx={{
-              backgroundColor: "#b20000",
-              color: "white",
-              borderRadius: "10px",
-              width: 100,
-              "&:hover": { backgroundColor: "#8c0000" },
-            }}
-          >
-            Modificar
-          </Button>
-          <Button
-            variant="contained"
+            onClick={handleDeleteAccount}
             sx={{
               backgroundColor: "#b20000",
               color: "white",
@@ -161,7 +181,9 @@ function Perfil() {
 
         <Button
           variant="contained"
-          onClick={() => navigate("/minhasReservas", { state: { id_usuario } })}
+          onClick={() =>
+            navigate("/minhasReservas", { state: { id_usuario } })
+          }
           sx={{
             backgroundColor: "#b20000",
             color: "white",
@@ -175,7 +197,6 @@ function Perfil() {
         </Button>
       </Box>
 
-      {/* RODAPÉ */}
       <Box
         sx={{
           backgroundColor: "#b71c1c",
@@ -186,7 +207,6 @@ function Perfil() {
           px: 2,
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}></div>
         <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>
