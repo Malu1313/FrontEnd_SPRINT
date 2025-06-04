@@ -47,13 +47,7 @@ function Perfil() {
     fetchUsuario();
   }, [id_usuario]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUsuario((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+
 
   const handleLogout = () => {
     localStorage.removeItem("authenticated");
@@ -131,7 +125,7 @@ function Perfil() {
             label="Nome:"
             name="nome"
             value={usuario.nome}
-            onChange={handleChange}
+            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -139,7 +133,7 @@ function Perfil() {
             label="Email:"
             name="email"
             value={usuario.email}
-            onChange={handleChange}
+            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -147,7 +141,7 @@ function Perfil() {
             label="CPF:"
             name="cpf"
             value={usuario.cpf}
-            onChange={handleChange}
+            InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -156,7 +150,6 @@ function Perfil() {
             name="senha"
             type="password"
             value={usuario.senha}
-            onChange={handleChange}
             InputProps={{ readOnly: true }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth

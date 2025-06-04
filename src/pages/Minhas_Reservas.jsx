@@ -172,7 +172,7 @@ function MinhasReservas() {
 
         {/* Exibição de mensagem de sucesso */}
         {exclusaoSucesso && (
-          <Typography color="success.main" sx={{ mt: 2 }}>
+          <Typography color="green" sx={{ mt: 2 }}>
             Reserva excluída com sucesso!
           </Typography>
         )}

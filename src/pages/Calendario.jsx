@@ -11,7 +11,7 @@ import api from "../axios/axios"; // Instância axios configurada com o token
 export default function CalendarioReserva() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const {sala, idUser} = state;
+  const { sala, idUser } = state;
 
   console.log("Sala: ", sala.id_sala, "Id_Usuario: ", idUser);
 
@@ -33,23 +33,31 @@ export default function CalendarioReserva() {
       alert("Por favor, selecione os horários de início e fim!");
       return;
     }
-    
+
     const reservaData = {
-      fk_id_sala: sala.id_sala,  // Número da sala (não o id)
-      fk_id_usuario:idUser,
-      datahora_inicio: selectedDate.toISOString().split('T')[0] + 'T' + selectedTimeInicio, // data e hora início
-      datahora_fim: selectedDate.toISOString().split('T')[0] + 'T' + selectedTimeFim,   // data e hora fim
+      fk_id_sala: sala.id_sala,
+      fk_id_usuario: idUser,
+      datahora_inicio: selectedDate.toISOString().split("T")[0] + "T" + selectedTimeInicio,
+      datahora_fim: selectedDate.toISOString().split("T")[0] + "T" + selectedTimeFim,
     };
+
     console.log("Dados da reserva:", reservaData);
 
-    try {      
+    try {
       const response = await api.postReserva(reservaData);
       alert(response.data.message);
-      alert(`Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} de ${selectedTimeInicio} até ${selectedTimeFim}`);
-      navigate("/salas",{ state: { idUser } });
+      alert(
+        `Sala ${sala.numero} reservada para ${selectedDate.toLocaleDateString()} de ${selectedTimeInicio} até ${selectedTimeFim}`
+      );
+      navigate("/salas", { state: { idUser } });
     } catch (error) {
-      console.log("Erro ao reservar a sala:", error.response?.data || error.message);
-      alert(error.response.data.error);
+      const errMsg = error.response?.data?.error || error.message;
+
+      if (errMsg.includes("bloqueado")) {
+        alert("Você está bloqueado e não pode fazer reservas.");
+      } else {
+        alert(errMsg);
+      }
     }
   };
 
@@ -69,9 +77,8 @@ export default function CalendarioReserva() {
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
         <PersonOutlineIcon
           sx={{ marginLeft: "10px", fontSize: 30, cursor: "pointer", color: "black" }}
-         onClick={() => navigate("/perfil", { state: { idUser } })}
-          />
-
+          onClick={() => navigate("/perfil", { state: { idUser } })}
+        />
       </Box>
 
       {/* Conteúdo principal */}
@@ -121,7 +128,7 @@ export default function CalendarioReserva() {
           onClick={handleConfirmarReserva}
           sx={{
             backgroundColor: "#b71c1c",
-            '&:hover': { backgroundColor: "#a31818" },
+            "&:hover": { backgroundColor: "#a31818" },
             width: 150,
           }}
         >
