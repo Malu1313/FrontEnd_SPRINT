@@ -12,11 +12,9 @@ import { useNavigate } from "react-router-dom";
 import api from "../axios/axios";
 import logosenai from "../assets/logo-senai.png";
 
-
 function Perfil() {
   const navigate = useNavigate();
   const id_usuario = localStorage.getItem("id_usuario");
-  console.log(id_usuario)
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -24,6 +22,8 @@ function Perfil() {
     cpf: "",
     senha: "",
   });
+
+  const [editando, setEditando] = useState(false);
 
   useEffect(() => {
     async function fetchUsuario() {
@@ -47,14 +47,11 @@ function Perfil() {
     fetchUsuario();
   }, [id_usuario]);
 
-
-
   const handleLogout = () => {
     localStorage.removeItem("authenticated");
     localStorage.removeItem("id_usuario");
     navigate("/");
   };
-
 
   async function handleDeleteAccount() {
     if (!id_usuario) return;
@@ -73,59 +70,57 @@ function Perfil() {
       alert("Conta excluída com sucesso.");
       navigate("/");
     } catch (error) {
-      console.error("Erro ao excluir conta:", error.response.data.error);
+      console.error("Erro ao excluir conta:", error.response?.data?.error);
       alert("Erro ao excluir conta. Tente novamente.");
     }
   }
 
+  async function handleSalvar() {
+    try {
+      const { nome, email, cpf, senha } = usuario;
+      const senhaParaEnviar = senha === "******" ? undefined : senha;
+
+      const payload = {
+        nome,
+        email,
+        cpf,
+        ...(senhaParaEnviar && { senha: senhaParaEnviar }),
+      };
+
+      console.log("Enviando dados:", payload);
+
+      await api.putUsuario(id_usuario, payload);
+
+      alert("Dados atualizados com sucesso!");
+      setEditando(false);
+    } catch (error) {
+      console.error("Erro ao salvar alterações:", error);
+      alert("Erro ao salvar alterações. Tente novamente.");
+    }
+  }
+
+  const handleChange = (e) => {
+    setUsuario({ ...usuario, [e.target.name]: e.target.value });
+  };
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: "#fff",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Box
-        sx={{
-          backgroundColor: "#b71c1c",
-          height: 50,
-          display: "flex",
-          alignItems: "center",
-          px: 2,
-        }}
-      >
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ backgroundColor: "#b71c1c", height: 50, display: "flex", alignItems: "center", px: 2 }}>
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
       </Box>
 
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mt: 6,
-        }}
-      >
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", mt: 6 }}>
         <Avatar sx={{ width: 100, height: 100, mb: 4, bgcolor: "#D9D9D9" }}>
           <PersonOutlineIcon sx={{ fontSize: 50, color: "black" }} />
         </Avatar>
 
-        <Box
-          sx={{
-            width: "80%",
-            maxWidth: 400,
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
+        <Box sx={{ width: "80%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 2 }}>
           <TextField
             label="Nome:"
             name="nome"
             value={usuario.nome}
-            InputProps={{ readOnly: true }}
+            onChange={handleChange}
+            InputProps={{ readOnly: !editando }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -133,7 +128,8 @@ function Perfil() {
             label="Email:"
             name="email"
             value={usuario.email}
-            InputProps={{ readOnly: true }}
+            onChange={handleChange}
+            InputProps={{ readOnly: !editando }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -141,7 +137,8 @@ function Perfil() {
             label="CPF:"
             name="cpf"
             value={usuario.cpf}
-            InputProps={{ readOnly: true }}
+            onChange={handleChange}
+            InputProps={{ readOnly: !editando }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -150,13 +147,44 @@ function Perfil() {
             name="senha"
             type="password"
             value={usuario.senha}
-            InputProps={{ readOnly: true }}
+            onChange={handleChange}
+            InputProps={{ readOnly: !editando }}
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
         </Box>
 
         <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
+          {!editando ? (
+            <Button
+              variant="contained"
+              onClick={() => setEditando(true)}
+              sx={{
+                backgroundColor: "#b20000",
+                color: "white",
+                borderRadius: "10px",
+                width: 120,
+                "&:hover": { backgroundColor: "#8c0000" },
+              }}
+            >
+              Modificar
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={handleSalvar}
+              sx={{
+                backgroundColor: "#b20000",
+                color: "white",
+                borderRadius: "10px",
+                width: 120,
+                "&:hover": { backgroundColor: "#8c0000" },
+              }}
+            >
+              Salvar
+            </Button>
+          )}
+
           <Button
             variant="contained"
             onClick={handleDeleteAccount}
@@ -174,9 +202,7 @@ function Perfil() {
 
         <Button
           variant="contained"
-          onClick={() =>
-            navigate("/minhasReservas", { state: { id_usuario } })
-          }
+          onClick={() => navigate("/minhasReservas", { state: { id_usuario } })}
           sx={{
             backgroundColor: "#b20000",
             color: "white",
@@ -190,16 +216,7 @@ function Perfil() {
         </Button>
       </Box>
 
-      <Box
-        sx={{
-          backgroundColor: "#b71c1c",
-          height: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          px: 2,
-        }}
-      >
+      <Box sx={{ backgroundColor: "#b71c1c", height: 40, display: "flex", alignItems: "center", justifyContent: "flex-start", px: 2 }}>
         <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>

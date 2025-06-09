@@ -8,7 +8,7 @@ import ListSalas from "./pages/ListaSalas";
 import SalaDetalhes from "./pages/Descricao";
 import Reservar from "./pages/Calendario"; // Já tá certo o nome
 import Perfil from "./pages/Perfil";
-import Minhas_Reservas from "./pages/minhas_Reservas";
+import Minhas_Reservas from "./pages/Minhas_Reservas";
 
 
 function App() {

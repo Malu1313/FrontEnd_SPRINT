@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: "http://10.89.240.84:3000/projeto_senai/",
   headers: {
     accept: "application/json",
-
   },
 });
 
@@ -12,13 +11,12 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    console.log("Token: ", token)
+    console.log("Token: ", token);
     if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `Bearer ${token}`;
       config.headers.Authorization = `${token}`;
     }
-    
-    return config
+    return config;
   },
   (error) => Promise.reject(error)
 );
@@ -33,9 +31,7 @@ const sheets = {
   getReservasPorUsuario: (id_usuario) => api.get(`/reservas/usuario/${id_usuario}`),
   deleteReserva: (id_reserva) => api.delete(`/reserva/${id_reserva}`),
   deleteUser: (id_usuario) => api.delete(`/usuario/${id_usuario}`),
-
-
-  putUsuario: (usuario) => api.put("/usuario", usuario),
+  putUsuario: (id_usuario, usuario) => api.put(`/usuario/${id_usuario}`, usuario),
 };
 
 export default sheets;
