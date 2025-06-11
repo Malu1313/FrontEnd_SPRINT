@@ -21,8 +21,8 @@ function MinhasReservas() {
   const [idUsuario, setIdUsuario] = useState(null);
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [exclusaoSucesso, setExclusaoSucesso] = useState(false); 
-  
+  const [exclusaoSucesso, setExclusaoSucesso] = useState(false);
+  const [totalReservas, setTotalReservas] = useState(0);
 
   useEffect(() => {
     const idFromStorage = localStorage.getItem("id_usuario");
@@ -52,9 +52,22 @@ function MinhasReservas() {
       });
   };
 
+  // Função para carregar total de reservas
+  const carregarTotalReservas = () => {
+    sheets
+      .getTotalReserva(idUsuario)
+      .then((response) => {
+        setTotalReservas(response.data.totalReservas);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar total de reservas:", error);
+      });
+  };
+
   useEffect(() => {
     if (idUsuario) {
       carregarReservas();
+      carregarTotalReservas();
     }
   }, [idUsuario]);
 
@@ -83,16 +96,18 @@ function MinhasReservas() {
 
     try {
       await sheets.deleteReserva(idReserva); // Chamada para API excluir reserva
-      
+
       // Atualiza o estado local removendo a reserva excluída
-      setReservas((prevReservas) => 
+      setReservas((prevReservas) =>
         prevReservas.filter((reserva) => reserva.id_reserva !== idReserva)
       );
 
-      setExclusaoSucesso(true);  // Define o estado de sucesso
-      setTimeout(() => setExclusaoSucesso(false), 2000);  // Reseta o feedback após 2 segundos
+      carregarTotalReservas(); // Atualiza o total após exclusão
+
+      setExclusaoSucesso(true); // Define o estado de sucesso
+      setTimeout(() => setExclusaoSucesso(false), 2000); // Reseta o feedback após 2 segundos
     } catch (error) {
-      console.error("Erro ao excluir reserva:", error.response.data.error);
+      console.error("Erro ao excluir reserva:", error.response?.data?.error || error);
       alert("Erro ao excluir reserva.");
     }
   };
@@ -135,7 +150,7 @@ function MinhasReservas() {
         </Avatar>
 
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Minhas Reservas:
+          Minhas Reservas - Total: {totalReservas}
         </Typography>
 
         {loading ? (

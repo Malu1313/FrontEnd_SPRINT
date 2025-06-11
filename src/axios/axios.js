@@ -32,6 +32,7 @@ const sheets = {
   deleteReserva: (id_reserva) => api.delete(`/reserva/${id_reserva}`),
   deleteUser: (id_usuario) => api.delete(`/usuario/${id_usuario}`),
   putUsuario: (id_usuario, usuario) => api.put(`/usuario/${id_usuario}`, usuario),
+  getTotalReserva: (id_usuario) => api.get(`/totalReservas/${id_usuario}`),
 };
 
 export default sheets;

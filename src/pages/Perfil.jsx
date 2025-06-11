@@ -91,7 +91,7 @@ function Perfil() {
       if (senha && senha.trim() !== "" && senha !== "******") {
         payload.senha = senha;
       }
-  
+  //dados do array
       console.log("Enviando dados:", payload);
   
       await api.putUsuario(id_usuario, payload);
