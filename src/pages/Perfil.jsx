@@ -20,7 +20,7 @@ function Perfil() {
     nome: "",
     email: "",
     cpf: "",
-    senha: "",
+    senha: "******", // valor visual inicial
   });
 
   const [editando, setEditando] = useState(false);
@@ -37,7 +37,7 @@ function Perfil() {
           nome: userData.nome || "",
           email: userData.email || "",
           cpf: userData.cpf || "",
-          senha: "******", // ocultar senha
+          senha: "******", // mostrar máscara ao invés da senha real
         });
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error);
@@ -77,44 +77,83 @@ function Perfil() {
 
   async function handleSalvar() {
     try {
-      const { nome, email, cpf, senha } = usuario;
-      const senhaParaEnviar = senha === "******" ? undefined : senha;
-
-      const payload = {
-        nome,
-        email,
-        cpf,
-        ...(senhaParaEnviar && { senha: senhaParaEnviar }),
-      };
-
+      const { nome, email, senha } = usuario;
+  
+      // Monta payload incluindo nome sempre (assumindo que nome é obrigatório)
+      const payload = { nome };
+  
+      // Só adiciona email se estiver preenchido (não vazio)
+      if (email && email.trim() !== "") {
+        payload.email = email;
+      }
+  
+      // Só envia senha se foi alterada (diferente da máscara e não vazia)
+      if (senha && senha.trim() !== "" && senha !== "******") {
+        payload.senha = senha;
+      }
+  
       console.log("Enviando dados:", payload);
-
+  
       await api.putUsuario(id_usuario, payload);
-
+  
       alert("Dados atualizados com sucesso!");
       setEditando(false);
+  
+      // Restaura a senha para máscara
+      setUsuario((prev) => ({ ...prev, senha: "******" }));
     } catch (error) {
       console.error("Erro ao salvar alterações:", error);
       alert("Erro ao salvar alterações. Tente novamente.");
     }
   }
-
+  
   const handleChange = (e) => {
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", display: "flex", flexDirection: "column" }}>
-      <Box sx={{ backgroundColor: "#b71c1c", height: 50, display: "flex", alignItems: "center", px: 2 }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 50,
+          display: "flex",
+          alignItems: "center",
+          px: 2,
+        }}
+      >
         <img src={logosenai} alt="SENAI" style={{ height: 100 }} />
       </Box>
 
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", mt: 6 }}>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 6,
+        }}
+      >
         <Avatar sx={{ width: 100, height: 100, mb: 4, bgcolor: "#D9D9D9" }}>
           <PersonOutlineIcon sx={{ fontSize: 50, color: "black" }} />
         </Avatar>
 
-        <Box sx={{ width: "80%", maxWidth: 400, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          sx={{
+            width: "80%",
+            maxWidth: 400,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
           <TextField
             label="Nome:"
             name="nome"
@@ -137,8 +176,7 @@ function Perfil() {
             label="CPF:"
             name="cpf"
             value={usuario.cpf}
-            onChange={handleChange}
-            InputProps={{ readOnly: !editando }}
+            InputProps={{ readOnly: true }}  // CPF SEM EDIÇÃO NUNCA
             sx={{ backgroundColor: "#D9D9D9" }}
             fullWidth
           />
@@ -148,8 +186,9 @@ function Perfil() {
             type="password"
             value={usuario.senha}
             onChange={handleChange}
-            InputProps={{ readOnly: !editando }}
+            InputProps={{ readOnly: true }} // senha não é editável direto, pode alterar via outro fluxo se quiser
             sx={{ backgroundColor: "#D9D9D9" }}
+            placeholder="Deixe em branco para manter a senha atual"
             fullWidth
           />
         </Box>
@@ -216,7 +255,16 @@ function Perfil() {
         </Button>
       </Box>
 
-      <Box sx={{ backgroundColor: "#b71c1c", height: 40, display: "flex", alignItems: "center", justifyContent: "flex-start", px: 2 }}>
+      <Box
+        sx={{
+          backgroundColor: "#b71c1c",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          px: 2,
+        }}
+      >
         <IconButton onClick={handleLogout} sx={{ color: "black" }}>
           <LogoutIcon />
         </IconButton>
