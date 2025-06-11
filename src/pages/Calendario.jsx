@@ -51,13 +51,11 @@ export default function CalendarioReserva() {
       );
       navigate("/salas", { state: { idUser } });
     } catch (error) {
-      const errMsg = error.response?.data?.error || error.message;
+     const data = error.response?.data;
+const errMsg = data?.details || data?.error || "Erro inesperado ao fazer a reserva.";
 
-      if (errMsg.includes("bloqueado")) {
-        alert("Você está bloqueado e não pode fazer reservas.");
-      } else {
-        alert(errMsg);
-      }
+alert(errMsg);
+
     }
   };
 

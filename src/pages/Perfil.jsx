@@ -20,7 +20,7 @@ function Perfil() {
     nome: "",
     email: "",
     cpf: "",
-    senha: "******", // valor visual inicial
+    senha: "******", 
   });
 
   const [editando, setEditando] = useState(false);
@@ -37,7 +37,7 @@ function Perfil() {
           nome: userData.nome || "",
           email: userData.email || "",
           cpf: userData.cpf || "",
-          senha: "******", // mostrar máscara ao invés da senha real
+          senha: "******", 
         });
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error);
@@ -82,7 +82,7 @@ function Perfil() {
       // Monta payload incluindo nome sempre (assumindo que nome é obrigatório)
       const payload = { nome };
   
-      // Só adiciona email se estiver preenchido (não vazio)
+      // Só adiciona email se estiver preenchido 
       if (email && email.trim() !== "") {
         payload.email = email;
       }
@@ -106,8 +106,8 @@ function Perfil() {
       alert("Erro ao salvar alterações. Tente novamente.");
     }
   }
-  
-  const handleChange = (e) => {
+  //atualiza o estado do usuario 
+  const handleChange = (e) => {//nome do campo    valor digitado
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
